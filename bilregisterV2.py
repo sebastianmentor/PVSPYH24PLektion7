@@ -10,57 +10,71 @@ bilregister = {"ABC123":
 # bilregister -> {registreringsnummer : bil}
 
 def lägga_till_ny_bil(regnr):
-    if regnr in bilregister:
-        print("Bilen finns redan!!!")
-    else:
-        märke = input("Ange märke: ")
-        färg = input("Ange färg: ")
-        årsmodell = input("Ange årsmodell: ")
-        pris = input("Ange nuvarande pris: ")
+    märke = input("Ange märke: ")
+    färg = input("Ange färg: ")
+    årsmodell = input("Ange årsmodell: ")
+    pris = input("Ange nuvarande pris: ")
 
-        bil = dict(
-            märke=märke, 
-            färg=färg, 
-            årsmodell=årsmodell, 
-            pris=pris
-            )
+    bil = dict(
+        märke=märke, 
+        färg=färg, 
+        årsmodell=årsmodell, 
+        pris=pris
+        )
 
-        bilregister[regnr] = bil
+    bilregister[regnr] = bil
 
 def kolla_upp_bil(regnr):
-    if regnr in bilregister:
-        bil = bilregister[regnr]
-        print(f"{regnr}:")
-        for key,val in bil.items():
-            print(f"\t{key} : {val}")
-        print()
-
-    else:
-        print("Kunde inte hitta bilen i registret!!!!")
+    bil = bilregister[regnr]
+    print(f"{regnr}:")
+    for key,val in bil.items():
+        print(f"\t{key} : {val}")
+    print()
 
 def ändra_färg_eller_pris(regnr,ändring):
     nytt_värde = input(f"Ange nytt värde: ")
     bilregister[regnr][ändring] = nytt_värde
 
 def ändra_biluppgifter(regnr):
-    if regnr in bilregister:
-        print("1. Färg")
-        print("2. Pris")
-        ändring = input("Vad önskas ändras?")
+    print("1. Färg")
+    print("2. Pris")
+    ändring = input("Vad önskas ändras?")
 
-        if  ändring == "1":
-            ändra_färg_eller_pris(regnr, "färg")
+    if  ändring == "1":
+        ändra_färg_eller_pris(regnr, "färg")
 
-        elif ändring == "2":
-            ändra_färg_eller_pris(regnr, "pris")
-
-
-        else:
-            print("Fel input! Återgår till menyn!")
-
+    elif ändring == "2":
+        ändra_färg_eller_pris(regnr, "pris")
 
     else:
-        print("Kunde inte hitta bilen!!")
+        print("Fel input! Återgår till menyn!")
+
+
+
+def kontrollera_om_regnr_finns(regnr):
+    if regnr in bilregister:
+        return True
+    else:
+        return False
+
+def hantera_bil(val):
+    regnummer = input("Skriv in regnummer: ")
+    finns_bil = kontrollera_om_regnr_finns(regnummer)
+
+    if val == "1":
+        if finns_bil:
+            print('Bilen finns redan!')
+        else:
+            lägga_till_ny_bil(regnummer)
+
+    elif val == "2" and finns_bil:
+        kolla_upp_bil(regnummer)
+
+    elif val == "3" and finns_bil:
+        ändra_biluppgifter(regnummer)
+    
+    else:
+        print('Bilen finns inte i registret!!!')
 
 def main():
     print("Välkommen till Lasses Bilkoll!")
@@ -74,14 +88,8 @@ def main():
 
         val = input("Vänligen gör ett val: ")
 
-        if val == "1":
-            lägga_till_ny_bil(input("Skriv in regnummer: "))
-
-        elif val == "2":
-            kolla_upp_bil(input("Skriv in regnummer: "))
-
-        elif val == "3":
-            ändra_biluppgifter(input("Skriv in regnummer: "))
+        if val in ['1','2','3']:
+            hantera_bil(val)
 
         elif val == "4":
             for regnr, bil in bilregister.items():
